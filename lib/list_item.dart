@@ -1,23 +1,19 @@
 import 'dart:math';
-
 import 'package:flip_card/flip_card.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:learningwords/custom_card.dart';
+import 'package:learningwords/models/item.dart';
+import 'package:learningwords/redux/view_model.dart';
 
 class ListItem extends StatefulWidget {
-  final Map item; //
+  final Item item;
   final Color color;
-  final bool isSelected;
-  final bool selectionMode;
-  final Function onSelected;
+  final ViewModel model;
 
   const ListItem({
     @required this.item,
     @required this.color,
-    this.isSelected = false,
-    this.selectionMode = false,
-    this.onSelected,
+    @required this.model,
   });
 
   @override
@@ -25,55 +21,49 @@ class ListItem extends StatefulWidget {
 }
 
 class _ListItemState extends State<ListItem> {
-  var _isSelected = false;
+  Item get item => widget.item;
 
-  @override
-  void initState() {
-    _isSelected = widget.isSelected;
-    super.initState();
-  }
+  Color get color => widget.color;
+
+  ViewModel get model => widget.model;
 
   void _onLongPress() {
-    setState(() {
-      _isSelected = true;
-    });
-
-    if (!widget.onSelected()) {
-      setState(() {
-        _isSelected = false;
-      });
-    }
+    model.selectItem(item, !item.isSelected);
   }
 
   @override
   Widget build(BuildContext context) {
+    print(model.selectionMode);
+
     return Container(
       margin: EdgeInsets.only(right: 8.0),
       height: 96,
       child: GestureDetector(
         onLongPress: _onLongPress,
-        onTap: widget.selectionMode ? _onLongPress : null,
+        onTap: model.selectionMode ? _onLongPress : null,
         child: FlipCard(
           direction: FlipDirection.VERTICAL,
-          flipOnTouch: !widget.selectionMode,
+          flipOnTouch: !model.selectionMode,
           front: CustomCard(
-            backgroundColor: _isSelected ? widget.color : Colors.white,
-            secondaryColor: widget.color,
+            backgroundColor: item.isSelected ? color : Colors.white,
+            secondaryColor: color,
             child: Container(
               alignment: Alignment.centerLeft,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    widget.item["kanji"],
+                    item.kanji,
                     style: Theme.of(context).textTheme.headline5.copyWith(
-                          color: _isSelected ? Colors.white : Colors.black87,
+                          color:
+                              item.isSelected ? Colors.white : Colors.black87,
                         ),
                   ),
                   Text(
                     "N" + (Random().nextInt(5) + 1).toString(),
                     style: Theme.of(context).textTheme.caption.copyWith(
-                          color: _isSelected ? Colors.white : Colors.black87,
+                          color:
+                              item.isSelected ? Colors.white : Colors.black87,
                         ),
                   ),
                 ],
@@ -81,12 +71,12 @@ class _ListItemState extends State<ListItem> {
             ),
           ),
           back: CustomCard(
-            backgroundColor: widget.color,
+            backgroundColor: color,
             secondaryColor: Colors.white,
             child: Container(
               alignment: Alignment.centerLeft,
               child: Text(
-                widget.item["trad"],
+                item.translation,
                 style: Theme.of(context)
                     .textTheme
                     .subtitle1

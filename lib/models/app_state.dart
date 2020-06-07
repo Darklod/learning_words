@@ -4,20 +4,15 @@ import 'package:learningwords/models/item.dart';
 @immutable
 class AppState {
   final List<Item> items;
-  final bool selectionMode;
 
   const AppState({
     @required this.items,
-    @required this.selectionMode,
   });
 
-  AppState.initialState()
-      : items = List.unmodifiable(<Item>[]),
-        selectionMode = false;
+  AppState.initialState() : items = List.unmodifiable(<Item>[]);
 
   AppState.fromJson(Map json)
-      : items = (json["items"] as List).map((i) => Item.fromJson(i)).toList(),
-        selectionMode = false;
+      : items = (json["items"] as List).map((i) => Item.fromJson(i)).toList();
 
   Map toJson() {
     return {"items": items};

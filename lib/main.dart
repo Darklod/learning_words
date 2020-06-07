@@ -1,11 +1,13 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_redux/flutter_redux.dart';
+
 import 'package:learningwords/app_theme.dart';
 import 'package:learningwords/home_page.dart';
+
 import 'package:learningwords/redux/actions.dart';
 import 'package:learningwords/redux/reducers.dart';
+
 import 'package:redux/redux.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 
 import 'models/app_state.dart';
 
@@ -29,7 +31,7 @@ class MyApp extends StatelessWidget {
         theme: AppTheme.myThemeTMP,
         home: StoreBuilder<AppState>(
           onInit: (store) => store.dispatch(GetItemsAction()),
-          builder: (_, Store<AppState> store) {
+          builder: (BuildContext context, Store<AppState> store) {
             return HomePage();
           },
         ),

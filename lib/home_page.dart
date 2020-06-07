@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_redux/flutter_redux.dart';
 import 'package:learningwords/add_page.dart';
 import 'package:learningwords/data_search.dart';
-import 'package:learningwords/models/item.dart';
-import 'package:learningwords/models/models.dart';
-import 'package:learningwords/redux/actions.dart';
+import 'package:learningwords/models/app_state.dart';
+import 'package:learningwords/redux/view_model.dart';
 import 'package:learningwords/word_list.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
 
 class HomePage extends StatefulWidget {
@@ -14,83 +13,45 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final _list = [
-    {"kanji": "希望", "trad": "Hope"},
-    {"kanji": "絶望", "trad": "Despair"},
-    {"kanji": "未来", "trad": "Future"},
-    {"kanji": "駅", "trad": "Station"},
-    {"kanji": "市場", "trad": "Market"},
-    {"kanji": "日記", "trad": "Diary"},
-    {"kanji": "犬", "trad": "Dog"},
-    {"kanji": "猫", "trad": "Cat"},
-    {"kanji": "混乱", "trad": "Confusion"},
-    {"kanji": "血", "trad": "Blood"},
-  ]..shuffle();
-
-  var _selectedItems = [];
-
-  get _selectionMode => _selectedItems.length > 0;
-
-  bool _onSelectItem(index) {
-    if (!_selectedItems.contains(index)) {
-      setState(() => _selectedItems.add(index));
-      print(_selectedItems);
-      return true;
-    } else {
-      setState(() {
-        _selectedItems.remove(index);
-      });
-      print(_selectedItems);
-      return false;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () {
-        if (_selectionMode) {
-          setState(() {
-            _selectedItems.clear();
-          });
-          return Future.value(false);
-        }
-        return Future.value(true);
-      },
-      child: DefaultTabController(
-        length: 3,
-        child: Scaffold(
-          drawer: Drawer(),
-          body: StoreConnector<AppState, _ViewModel>(
-            converter: (Store<AppState> store) => _ViewModel.create(store),
-            builder: (context, _ViewModel viewModel) {
-              return NestedScrollView(
-                headerSliverBuilder:
-                    (BuildContext context, bool innerBoxIsScrolled) {
+    return StoreConnector<AppState, ViewModel>(
+      converter: (Store<AppState> store) => ViewModel.create(store),
+      builder: (BuildContext context, ViewModel vm) {
+        return WillPopScope(
+          onWillPop: () {
+            if (vm.selectionMode) {
+              vm.selectAll(false);
+              return Future.value(false);
+            }
+            return Future.value(true);
+          },
+          child: DefaultTabController(
+            length: 3,
+            child: Scaffold(
+              drawer: Drawer(),
+              body: NestedScrollView(
+                headerSliverBuilder: (_, bool innerBoxIsScrolled) {
                   return <Widget>[
                     SliverAppBar(
                       title: Text(
-                        _selectionMode ? "${_selectedItems.length}" : "Words",
+                        vm.selectionMode
+                            ? "${vm.selectionCount} selected"
+                            : "Words",
                       ),
-                      centerTitle: !_selectionMode,
-                      floating: !_selectionMode,
+                      centerTitle: !vm.selectionMode,
+                      floating: !vm.selectionMode,
                       pinned: true,
-                      snap: !_selectionMode,
+                      snap: !vm.selectionMode,
                       backgroundColor:
-                          !_selectionMode ? Colors.teal : Colors.blue,
-                      actions: _selectionMode
+                          !vm.selectionMode ? Colors.teal : Color(0xFF363640),
+                      actions: vm.selectionMode
                           ? [
                               IconButton(
                                 icon: Icon(Icons.done_all),
                                 tooltip: "Select All",
                                 onPressed: () {
-                                  setState(() {
-                                    _selectedItems.clear();
-                                    _selectedItems = List<int>.generate(
-                                      _list.length,
-                                      (i) => i + 1,
-                                    );
-                                  });
+                                  vm.selectAll(true);
                                 },
                               ),
                               IconButton(
@@ -115,14 +76,10 @@ class _HomePageState extends State<HomePage> {
                                 },
                               ),
                             ],
-                      leading: _selectionMode
+                      leading: vm.selectionMode
                           ? IconButton(
                               icon: Icon(Icons.close),
-                              onPressed: () {
-                                setState(() {
-                                  _selectedItems.clear();
-                                });
-                              },
+                              onPressed: () => vm.selectAll(false),
                             )
                           : null,
                       bottom: buildTabBar(context),
@@ -131,38 +88,23 @@ class _HomePageState extends State<HomePage> {
                 },
                 body: TabBarView(
                   children: [
-                    WordList(
-                      _list,
-                      Colors.blue[400],
-                      _selectedItems.length > 0,
-                      _onSelectItem,
-                    ),
-                    WordList(
-                      _list,
-                      Colors.amber[300],
-                      _selectedItems.length > 0,
-                      _onSelectItem,
-                    ),
-                    WordList(
-                      _list,
-                      Colors.green[300],
-                      _selectedItems.length > 0,
-                      _onSelectItem,
-                    ),
+                    WordList(vm, vm.toLearnItems, Colors.blue[400]),
+                    WordList(vm, vm.learningItems, Colors.amber[300]),
+                    WordList(vm, vm.learnedItems, Colors.green[300]),
                   ],
                 ),
-              );
-            },
+              ),
+              floatingActionButton: FloatingActionButton(
+                child: Icon(Icons.add),
+                onPressed: () {
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (_) => AddPage()));
+                },
+              ),
+            ),
           ),
-          floatingActionButton: FloatingActionButton(
-            child: Icon(Icons.add),
-            onPressed: () {
-              Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (_) => AddPage()));
-            },
-          ),
-        ),
-      ),
+        );
+      },
     );
   }
 
@@ -179,41 +121,6 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
-    );
-  }
-}
-
-class _ViewModel {
-  final List<Item> items;
-  final Function(Item) onAddItem;
-  final Function(Item) onRemoveItem;
-  final Function(List<Item>) onRemoveItems;
-
-  _ViewModel({
-    this.items,
-    this.onAddItem,
-    this.onRemoveItem,
-    this.onRemoveItems,
-  });
-
-  factory _ViewModel.create(Store<AppState> store) {
-    _onAddItem(Item item) {
-      store.dispatch(AddItemAction(item));
-    }
-
-    _onRemoveItem(Item item) {
-      store.dispatch(RemoveItemAction(item));
-    }
-
-    _onRemoveItems(List<Item> item) {
-      store.dispatch(RemoveItemsAction(item));
-    }
-
-    return _ViewModel(
-      items: store.state.items,
-      onAddItem: _onAddItem,
-      onRemoveItem: _onRemoveItem,
-      onRemoveItems: _onRemoveItems,
     );
   }
 }

@@ -18,6 +18,19 @@ class RemoveItemsAction {
   RemoveItemsAction(this.items);
 }
 
+class SelectItemAction {
+  final Item item;
+  final bool value;
+
+  SelectItemAction(this.item, this.value);
+}
+
+class SelectItemsAction {
+  final bool value;
+
+  SelectItemsAction(this.value);
+}
+
 class GetItemsAction {}
 
 class LoadedItemsAction {
