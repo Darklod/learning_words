@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:learningwords/list_item.dart';
+import 'package:learningwords/components/items/list_item.dart';
 import 'package:learningwords/models/item.dart';
 import 'package:learningwords/redux/view_model.dart';
 

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:learningwords/level.dart';
+import 'package:learningwords/components/level/level.dart';
 
 class LevelItem extends StatelessWidget {
   final Level level;

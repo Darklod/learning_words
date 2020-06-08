@@ -9,7 +9,6 @@ class ViewModel {
   final List<Item> toLearnItems;
   final List<Item> learningItems;
   final Function(Item) onAddItem;
-  final Function(Item) onRemoveItem;
   final Function(List<Item>) onRemoveItems;
   final Function(Item, bool) selectItem;
   final Function(bool) selectAll;
@@ -17,26 +16,21 @@ class ViewModel {
   final bool selectionMode;
 
   ViewModel({
-    this.items,
-    this.selectionMode,
-    this.selectionCount,
-    this.learnedItems,
-    this.toLearnItems,
-    this.learningItems,
-    this.onAddItem,
-    this.onRemoveItem,
-    this.onRemoveItems,
-    this.selectItem,
-    this.selectAll,
+    this.items, // Search, Home
+    this.selectionMode, // Home, Item
+    this.selectionCount, // Home
+    this.learnedItems,  // Home
+    this.toLearnItems,  // Home
+    this.learningItems, // Home
+    this.onAddItem, // AddPage
+    this.onRemoveItems, // Home
+    this.selectItem, // Item
+    this.selectAll,  // Home
   });
 
   factory ViewModel.create(Store<AppState> store) {
     _onAddItem(Item item) {
       store.dispatch(AddItemAction(item));
-    }
-
-    _onRemoveItem(Item item) {
-      store.dispatch(RemoveItemAction(item));
     }
 
     _onRemoveItems(List<Item> item) {
@@ -69,7 +63,6 @@ class ViewModel {
       learningItems: _filterByState(store.state.items, LearnState.Learning),
       toLearnItems: _filterByState(store.state.items, LearnState.ToLearn),
       onAddItem: _onAddItem,
-      onRemoveItem: _onRemoveItem,
       onRemoveItems: _onRemoveItems,
       selectItem: _onSelectItem,
       selectAll: _onSelectAll,

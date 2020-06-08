@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:learningwords/app_theme.dart';
-import 'package:learningwords/home_page.dart';
+import 'package:learningwords/pages/home.dart';
 
 import 'package:learningwords/redux/actions.dart';
 import 'package:learningwords/redux/reducers.dart';

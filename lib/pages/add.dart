@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:learningwords/invisible_appbar.dart';
-import 'package:learningwords/level.dart';
-import 'package:learningwords/level_field.dart';
-import 'package:learningwords/scrollable_footer.dart';
-import 'package:learningwords/section_field.dart';
+import 'package:learningwords/components/invisible_appbar.dart';
+import 'package:learningwords/components/level/level.dart';
+import 'package:learningwords/components/level/level_field.dart';
+import 'package:learningwords/components/scrollable_footer.dart';
+import 'package:learningwords/components/section_field.dart';
 
 class AddPage extends StatelessWidget {
   _onPressed() {}

@@ -1,7 +1,7 @@
 import 'dart:math';
 import 'package:flip_card/flip_card.dart';
 import 'package:flutter/material.dart';
-import 'package:learningwords/custom_card.dart';
+import 'package:learningwords/components/custom_card.dart';
 import 'package:learningwords/models/item.dart';
 import 'package:learningwords/redux/view_model.dart';
 

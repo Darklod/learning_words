@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 enum LearnState { Learned, Learning, ToLearn }
@@ -11,14 +10,14 @@ class _LearnStateHelper {
       case 'Learning':
         return LearnState.Learning;
       case 'ToLearn':
-        return LearnState.ToLearn;
       default:
-        throw RangeError("enum Fruit contains no value '$name'");
+        return LearnState.ToLearn;
     }
   }
 }
 
 class Item {
+  final String id;
   final String kanji;
   final String kana;
   final String translation;
@@ -26,6 +25,7 @@ class Item {
   final bool isSelected;
 
   const Item({
+    @required this.id,
     @required this.kanji,
     @required this.kana,
     @required this.translation,
@@ -41,6 +41,7 @@ class Item {
     bool isSelected,
   }) {
     return Item(
+      id: id ?? this.id,
       kanji: kanji ?? this.kanji,
       kana: kana ?? this.kana,
       translation: translation ?? this.translation,
@@ -51,15 +52,17 @@ class Item {
 
   factory Item.fromJson(Map json) {
     return Item(
-      kanji: json["kanji"],
-      kana: json["kana"],
-      translation: json["translation"],
+      id: json["id"] ?? "",
+      kanji: json["kanji"] ?? "",
+      kana: json["kana"] ?? "",
+      translation: json["translation"] ?? "",
       state: _LearnStateHelper.from(json["state"]),
     );
   }
 
   Map toJson() {
     return {
+      "id": id,
       "kanji": kanji,
       "kana": kana,
       "translation": translation,
