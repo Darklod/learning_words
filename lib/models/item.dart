@@ -33,6 +33,14 @@ class Item {
     this.isSelected = false,
   });
 
+  Item.empty()
+      : id = "",
+        kanji = "",
+        kana = "",
+        state = LearnState.ToLearn,
+        translation = "",
+        isSelected = false;
+
   Item copyWith({
     String kanji,
     String kana,

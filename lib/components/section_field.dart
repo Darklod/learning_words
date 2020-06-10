@@ -51,10 +51,12 @@ class CustomSectionField extends SectionField {
 
 class TextSectionField extends SectionField {
   final String hint;
+  final Function(String) onSaved;
 
   TextSectionField({
     Key key,
     this.hint,
+    this.onSaved,
     String title,
     double spacing,
     EdgeInsetsGeometry padding = const EdgeInsets.only(bottom: 32.0),
@@ -62,12 +64,13 @@ class TextSectionField extends SectionField {
 
   @override
   get child {
-    return TextField(
+    return TextFormField(
       decoration: InputDecoration(
         hintText: hint,
         border: UnderlineInputBorder(),
         filled: false,
       ),
+      onSaved: onSaved,
     );
   }
 }

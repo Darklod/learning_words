@@ -29,9 +29,7 @@ void appStateMiddleware(
     Store<AppState> store, action, NextDispatcher next) async {
   next(action);
 
-  if (action is AddItemAction ||
-      action is RemoveItemAction ||
-      action is RemoveItemsAction) {
+  if (action is AddItemAction || action is RemoveItemsAction) {
     saveToPrefs(store.state);
   }
 

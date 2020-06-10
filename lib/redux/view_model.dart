@@ -9,7 +9,8 @@ class ViewModel {
   final List<Item> toLearnItems;
   final List<Item> learningItems;
   final Function(Item) onAddItem;
-  final Function(List<Item>) onRemoveItems;
+  final Function() onDelete;
+  final Function(LearnState) onMove;
   final Function(Item, bool) selectItem;
   final Function(bool) selectAll;
   final int selectionCount;
@@ -23,18 +24,21 @@ class ViewModel {
     this.toLearnItems,  // Home
     this.learningItems, // Home
     this.onAddItem, // AddPage
-    this.onRemoveItems, // Home
+    this.onDelete, // Home
+    this.onMove, // Home
     this.selectItem, // Item
     this.selectAll,  // Home
   });
 
   factory ViewModel.create(Store<AppState> store) {
-    _onAddItem(Item item) {
-      store.dispatch(AddItemAction(item));
+    _filterSelected(List<Item> items) {
+      return items.where((i) => i.isSelected == true).toList();
     }
 
-    _onRemoveItems(List<Item> item) {
-      store.dispatch(RemoveItemsAction(item));
+    final _selectedItems = _filterSelected(store.state.items);
+
+    _onAddItem(Item item) {
+      store.dispatch(AddItemAction(item));
     }
 
     _onSelectItem(Item item, bool value) {
@@ -45,15 +49,17 @@ class ViewModel {
       store.dispatch(SelectItemsAction(value));
     }
 
+    _onDelete() {
+      store.dispatch(RemoveItemsAction(_selectedItems));
+    }
+
+    _onMove(LearnState newState) {
+      store.dispatch(MoveItemsAction(_selectedItems, newState));
+    }
+
     _filterByState(List<Item> items, LearnState state) {
       return items.where((i) => i.state == state).toList();
     }
-
-    _filterSelected(List<Item> items) {
-      return items.where((i) => i.isSelected == true).toList();
-    }
-
-    final _selectedItems = _filterSelected(store.state.items);
 
     return ViewModel(
       items: store.state.items,
@@ -63,7 +69,8 @@ class ViewModel {
       learningItems: _filterByState(store.state.items, LearnState.Learning),
       toLearnItems: _filterByState(store.state.items, LearnState.ToLearn),
       onAddItem: _onAddItem,
-      onRemoveItems: _onRemoveItems,
+      onDelete: _onDelete,
+      onMove: _onMove,
       selectItem: _onSelectItem,
       selectAll: _onSelectAll,
     );
