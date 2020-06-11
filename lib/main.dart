@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Words',
         locale: Locale('ja', 'JP'),
-        theme: AppTheme.myThemeTMP,
+        theme: AppTheme.lightTheme,
         home: StoreBuilder<AppState>(
           onInit: (store) => store.dispatch(GetItemsAction()),
           builder: (BuildContext context, Store<AppState> store) {

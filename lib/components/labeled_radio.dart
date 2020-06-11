@@ -34,7 +34,7 @@ class LabeledRadio<T> extends StatelessWidget {
               onChanged: (T newValue) => onChanged(newValue),
             ),
             const SizedBox(width: 8),
-            Text(label),
+            Text(label, style: Theme.of(context).textTheme.bodyText1),
           ],
         ),
       ),

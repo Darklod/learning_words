@@ -67,8 +67,6 @@ class TextSectionField extends SectionField {
     return TextFormField(
       decoration: InputDecoration(
         hintText: hint,
-        border: UnderlineInputBorder(),
-        filled: false,
       ),
       onSaved: onSaved,
     );

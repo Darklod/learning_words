@@ -12,7 +12,7 @@ class InvisibleAppBar extends StatelessWidget {
       child: Row(
         children: [
           IconButton(
-            icon: Icon(Icons.keyboard_arrow_left, color: Colors.black87),
+            icon: Icon(Icons.keyboard_arrow_left),
             tooltip: "Back",
             onPressed: () {
               Navigator.of(context).pop();
@@ -22,10 +22,7 @@ class InvisibleAppBar extends StatelessWidget {
             child: Text(
               title,
               textAlign: TextAlign.center,
-              style: Theme.of(context)
-                  .textTheme
-                  .headline6
-                  .copyWith(color: Colors.black87),
+              style: Theme.of(context).textTheme.headline6,
             ),
           ),
           SizedBox(width: 40.0),

@@ -100,7 +100,8 @@ class _AddPageState extends State<AddPage> {
                               }
 
                               setState(
-                                  () => _item = _item.copyWith(state: state));
+                                () => _item = _item.copyWith(state: state),
+                              );
                             },
                           ),
                         ),

@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:learningwords/models/item.dart';
 
 class DataSearch extends SearchDelegate<String> {
+  final List<Item> list;
+
+  DataSearch(this.list);
+
   final words = [
     "kotoba",
     "nihongo",

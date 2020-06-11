@@ -10,17 +10,20 @@ class CustomCard extends StatelessWidget {
   final Color backgroundColor;
   final Color secondaryColor;
   final Position position;
+  final Widget label;
 
   CustomCard({
     @required this.child,
     this.backgroundColor = Colors.white,
     this.secondaryColor = Colors.blue,
     this.position = Position.bottom,
+    this.label,
   });
 
   double get borderSize => 6.0;
 
   double get bottomSize => position == Position.bottom ? borderSize : 0;
+
   double get topSize => position == Position.top ? borderSize : 0;
 
   @override
@@ -39,13 +42,18 @@ class CustomCard extends StatelessWidget {
           color: secondaryColor,
           borderRadius: BorderRadius.circular(radius),
         ),
-        child: Container(
-          decoration: BoxDecoration(
-            color: backgroundColor,
-            borderRadius: BorderRadius.circular(radius),
-          ),
-          padding: const EdgeInsets.all(16.0),
-          child: child,
+        child: Stack(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                color: backgroundColor,
+                borderRadius: BorderRadius.circular(radius),
+              ),
+              padding: const EdgeInsets.all(16.0),
+              child: child,
+            ),
+            if (label != null) label,
+          ],
         ),
       ),
     );

@@ -4,15 +4,15 @@ import 'package:learningwords/models/item.dart';
 
 class StateDialog extends StatefulWidget {
   final Function onConfirm;
-  final Function onCancel;
 
-  const StateDialog({Key key, this.onConfirm, this.onCancel}) : super(key: key);
+  const StateDialog({Key key, this.onConfirm}) : super(key: key);
 
   @override
   _StateDialogState createState() => _StateDialogState();
 }
 
 class _StateDialogState extends State<StateDialog> {
+  final states = ["Learned", "Learning", "To Learn"];
   var _state;
 
   @override
@@ -23,13 +23,9 @@ class _StateDialogState extends State<StateDialog> {
       shape: const RoundedRectangleBorder(
         borderRadius: const BorderRadius.all(Radius.circular(8)),
       ),
-      titleTextStyle:
-          Theme.of(context).textTheme.subtitle2.copyWith(color: Colors.black87),
-      title: Text("Select State"),
-      content: StatefulBuilder(builder: (_, StateSetter setState) {
-        final states = ["Learned", "Learning", "To Learn"];
-
-        return Column(
+      title: const Text("Select State"),
+      content: Container(
+        child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: states.map((s) {
@@ -42,17 +38,59 @@ class _StateDialogState extends State<StateDialog> {
               },
             );
           }).toList(),
-        );
-      }),
+        ),
+      ),
       actions: <Widget>[
         _CustomAction(
           title: "CANCEL",
-          onPressed: widget.onCancel,
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
         _CustomAction(
           title: "CONFIRM",
-          onPressed: () => widget.onConfirm(_state),
+          enabled: _state != null,
+          onPressed: () {
+            var index = 0;
+            if (_state != null) {
+              index = LearnState.values.indexOf(_state);
+            }
+            widget.onConfirm(_state, index);
+            Navigator.pop(context);
+          },
         )
+      ],
+    );
+  }
+}
+
+class DeleteDialog extends StatelessWidget {
+  final Function onConfirm;
+
+  const DeleteDialog({Key key, this.onConfirm}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      shape: const RoundedRectangleBorder(
+        borderRadius: const BorderRadius.all(Radius.circular(8)),
+      ),
+      title: const Text('Confirm Delete'),
+      content: const Text("Are you sure you want to delete selected words?"),
+      actions: [
+        _CustomAction(
+          title: "CANCEL",
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+        _CustomAction(
+          title: "OK",
+          onPressed: () {
+            onConfirm();
+            Navigator.of(context).pop();
+          },
+        ),
       ],
     );
   }
@@ -60,23 +98,25 @@ class _StateDialogState extends State<StateDialog> {
 
 class _CustomAction extends StatelessWidget {
   final String title;
+  final bool enabled;
   final Function onPressed;
 
-  const _CustomAction({Key key, this.title, this.onPressed}) : super(key: key);
+  const _CustomAction({
+    Key key,
+    this.title,
+    this.onPressed,
+    this.enabled = true,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return FlatButton(
-      onPressed: onPressed,
+      onPressed: enabled ? onPressed : null,
       padding: const EdgeInsets.all(8.0),
       shape: const RoundedRectangleBorder(
         borderRadius: const BorderRadius.all(Radius.circular(8)),
       ),
-      child: Text(title,
-          style: Theme.of(context)
-              .textTheme
-              .button
-              .copyWith(color: Theme.of(context).primaryColor)),
+      child: Text(title),
     );
   }
 }

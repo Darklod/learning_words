@@ -9,8 +9,10 @@ class CustomAppBar extends StatelessWidget {
   final Function onDelete;
   final Function onMove;
   final Function onClearSelection;
+  final TabController tabController;
 
   const CustomAppBar({
+    @required this.tabController,
     @required this.selectionMode,
     @required this.selectionCount,
     @required this.onSearch,
@@ -54,7 +56,7 @@ class CustomAppBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return SliverAppBar(
       title: Text(selectionMode ? "$selectionCount selected" : "Words"),
-      backgroundColor: !selectionMode ? Colors.teal : Color(0xFF363640),
+      backgroundColor: !selectionMode ? Theme.of(context).primaryColor : Color(0xFF363640),
       centerTitle: !selectionMode,
       floating: !selectionMode,
       snap: !selectionMode,
@@ -68,7 +70,7 @@ class CustomAppBar extends StatelessWidget {
               onPressed: onClearSelection,
             )
           : null,
-      bottom: CustomTabBar(),
+      bottom: CustomTabBar(controller: tabController),
     );
   }
 }
