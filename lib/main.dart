@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-
-import 'package:learningwords/app_theme.dart';
 import 'package:learningwords/pages/home.dart';
 
 import 'package:learningwords/redux/actions.dart';
@@ -25,21 +23,34 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return StoreProvider<AppState>(
       store: store,
-      child: MaterialApp(
-        title: 'Words',
-        locale: Locale('ja', 'JP'),
-        theme: AppTheme.lightTheme,
-        home: StoreBuilder<AppState>(
-          onInit: (store) => store.dispatch(GetItemsAction()),
-          builder: (BuildContext context, Store<AppState> store) {
-            return HomePage();
-          },
-        ),
+      child: StoreConnector<AppState, _ViewModel>(
+        converter: (Store<AppState> store) => _ViewModel.create(store),
+        builder: (BuildContext context, _ViewModel vm) {
+          return MaterialApp(
+            title: 'Words',
+            locale: Locale('ja', 'JP'),
+            theme: vm.themeData,
+            home: StoreBuilder<AppState>(
+              onInit: (store) => store.dispatch(GetItemsAction()),
+              builder: (BuildContext context, Store<AppState> store) {
+                return HomePage();
+              },
+            ),
+          );
+        },
       ),
     );
   }
 }
 
-// TODO: tema scuro: blu-nerissimo e teal e bianco
-// (https://dribbble.com/shots/9150888-Project-Management-App-Concept-2/attachments/1197627?mode=media)
-// TODO: https://pub.dev/packages/swipeable_card (per le review)
+class _ViewModel {
+  final ThemeData themeData;
+
+  _ViewModel({this.themeData});
+
+  factory _ViewModel.create(Store<AppState> store) {
+    return _ViewModel(
+      themeData: store.state.themeData,
+    );
+  }
+}

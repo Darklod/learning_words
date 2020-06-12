@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class CustomTabBar extends StatelessWidget implements PreferredSizeWidget {
   final TabController controller;
+
   const CustomTabBar({Key key, this.controller}) : super(key: key);
 
   @override

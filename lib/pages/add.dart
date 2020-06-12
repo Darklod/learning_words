@@ -36,10 +36,10 @@ class _AddPageState extends State<AddPage> {
         padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
         child: ScrollableFooter(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
             mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              InvisibleAppBar(title: "Add Word"),
+              InvisibleAppBar(title: "Insert Word", onSave: _onSave),
               Expanded(
                 child: Form(
                   key: _formKey,
@@ -70,59 +70,57 @@ class _AddPageState extends State<AddPage> {
                           hint: "訳",
                           onSaved: (s) {
                             setState(
-                                () => _item = _item.copyWith(translation: s));
+                              () => _item = _item.copyWith(translation: s),
+                            );
                           },
                         ),
                         CustomSectionField(
-                          title: "Level",
+                          title: "State",
                           spacing: 16.0,
-                          padding: EdgeInsets.zero,
+                          padding: const EdgeInsets.only(bottom: 32.0),
                           child: LevelField(
-                            selected: 0,
+                            selected: "To Learn",
+                            levelPadding: const EdgeInsets.symmetric(
+                              vertical: 12.0,
+                              horizontal: 16.0,
+                            ),
                             levels: [
                               Level(text: "To Learn", color: Colors.green[300]),
                               Level(text: "Learning", color: Colors.amber[400]),
                               Level(text: "Learned", color: Colors.blue[400]),
                             ],
-                            onChange: (index) {
-                              LearnState state;
-                              switch (index) {
-                                case 2:
-                                  state = LearnState.Learned;
-                                  break;
-                                case 1:
-                                  state = LearnState.Learning;
-                                  break;
-                                case 0:
-                                default:
-                                  state = LearnState.ToLearn;
-                                  break;
-                              }
-
+                            onChange: (String value) {
                               setState(
-                                () => _item = _item.copyWith(state: state),
+                                () => _item = _item.copyWith(state: value),
                               );
+                            },
+                          ),
+                        ),
+                        CustomSectionField(
+                          title: "JLPT",
+                          spacing: 16.0,
+                          padding: EdgeInsets.zero,
+                          child: LevelField(
+                            selected: "None",
+                            levelPadding: const EdgeInsets.all(12.0),
+                            levels: [
+                              Level(text: "None", color: Colors.redAccent),
+                              Level(text: "N5", color: Colors.redAccent),
+                              Level(text: "N4", color: Colors.redAccent),
+                              Level(text: "N3", color: Colors.redAccent),
+                              Level(text: "N2", color: Colors.redAccent),
+                              Level(text: "N1", color: Colors.redAccent),
+                            ],
+                            onChange: (String value) {
+                              setState(() {
+                                _item = _item.copyWith(jlpt: value);
+                              });
                             },
                           ),
                         ),
                       ],
                     ),
                   ),
-                ),
-              ),
-              Container(
-                margin: const EdgeInsets.all(24.0),
-                child: RaisedButton(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16.0),
-                  ),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16.0,
-                    vertical: 20.0,
-                  ),
-                  child: Text("ADD", style: TextStyle(color: Colors.white)),
-                  color: Colors.teal,
-                  onPressed: _onSave,
                 ),
               ),
             ],

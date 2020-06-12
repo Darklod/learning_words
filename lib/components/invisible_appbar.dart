@@ -2,17 +2,18 @@ import 'package:flutter/material.dart';
 
 class InvisibleAppBar extends StatelessWidget {
   final String title;
+  final Function onSave;
 
-  const InvisibleAppBar({Key key, this.title}) : super(key: key);
+  const InvisibleAppBar({Key key, this.title, this.onSave}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.only(top: 16.0),
+      padding: const EdgeInsets.only(top: 16.0, left: 8.0, right: 8.0),
       child: Row(
         children: [
           IconButton(
-            icon: Icon(Icons.keyboard_arrow_left),
+            icon: Icon(Icons.arrow_back),
             tooltip: "Back",
             onPressed: () {
               Navigator.of(context).pop();
@@ -25,7 +26,11 @@ class InvisibleAppBar extends StatelessWidget {
               style: Theme.of(context).textTheme.headline6,
             ),
           ),
-          SizedBox(width: 40.0),
+          IconButton(
+            onPressed: onSave,
+            icon: Icon(Icons.check),
+            tooltip: "Save",
+          ),
         ],
       ),
     );

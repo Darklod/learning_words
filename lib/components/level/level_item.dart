@@ -1,31 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:learningwords/components/level/level.dart';
-import 'package:tinycolor/tinycolor.dart';
 
 class LevelItem extends StatelessWidget {
   final Level level;
   final bool selected;
+  final EdgeInsets padding;
   final Function onTap;
 
   const LevelItem({
     @required this.level,
     this.selected = false,
+    this.padding,
     this.onTap,
     Key key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return FlatButton(
-      padding: const EdgeInsets.all(8.0),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-      color: selected ?  TinyColor(level.color).darken(20).lighten().color : TinyColor(level.color).lighten(10).color,
-      textColor: Colors.white,
-      disabledColor: Colors.grey[100],
-      onPressed: onTap,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-        child: Text(level.text),
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8.0),
+        color: selected ? level.color : Colors.grey[300],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(8.0),
+          child: Container(
+            padding: padding,
+            child: Text(
+              level.text,
+              style: Theme.of(context)
+                  .textTheme
+                  .button
+                  .copyWith(color: selected ? Colors.white : Colors.black87),
+            ),
+          ),
+        ),
       ),
     );
   }

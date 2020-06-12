@@ -4,68 +4,51 @@ import 'package:learningwords/components/level/level_item.dart';
 
 class LevelField extends StatefulWidget {
   final List<Level> levels;
-  final int selected;
-  final Axis direction;
+  final String selected;
+  final EdgeInsets levelPadding;
   final Function onChange;
 
-  const LevelField(
-      {@required this.levels,
-      this.selected,
-      this.onChange,
-      this.direction,
-      Key key})
-      : super(key: key);
+  const LevelField({
+    @required this.levels,
+    this.selected,
+    this.levelPadding,
+    this.onChange,
+    Key key,
+  }) : super(key: key);
 
   @override
   _LevelFieldState createState() => _LevelFieldState();
 }
 
 class _LevelFieldState extends State<LevelField> {
-  var _isSelected;
+  Map<String, bool> _choices = {};
 
   @override
   void initState() {
-    _isSelected = List<bool>.filled(widget.levels.length, false);
-    _isSelected[widget.selected] = true;
+    widget.levels.forEach((Level l) {
+      _choices[l.text] = false;
+    });
+    _choices[widget.selected] = true;
     super.initState();
   }
 
-  void _onTap(int index) {
+  void _onTap(String newValue) {
     setState(() {
-      for (int i = 0; i < _isSelected.length; i++) {
-        _isSelected[i] = index == i;
-      }
+      _choices = _choices.map((key, value) => MapEntry(key, key == newValue));
     });
-    widget.onChange(index);
+    widget.onChange(newValue);
   }
 
   @override
   Widget build(BuildContext context) {
-    final children = widget.levels
-        .asMap()
-        .map(
-          (int index, Level level) {
-            return MapEntry(
-              index,
-              LevelItem(
-                level: level,
-                selected: _isSelected[index],
-                onTap: () => _onTap(index),
-              ),
-            );
-          },
-        )
-        .values
-        .toList();
-
-    if (widget.direction == Axis.vertical)
-      return Container(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: children,
-        ),
+    final children = widget.levels.map((Level level) {
+      return LevelItem(
+        level: level,
+        padding: widget.levelPadding,
+        selected: _choices[level.text],
+        onTap: () => _onTap(level.text),
       );
+    }).toList();
 
     return Container(
       child: Row(

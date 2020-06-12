@@ -17,7 +17,7 @@ class RemoveItemsAction {
 // Move
 class MoveItemsAction {
   final List<Item> items;
-  final LearnState newState;
+  final String newState;
 
   MoveItemsAction(this.items, this.newState);
 }

@@ -35,14 +35,14 @@ class CustomAppBar extends StatelessWidget {
   List<Widget> get _selectionActions {
     return [
       IconButton(
-        icon: Icon(Icons.done_all),
-        tooltip: "Select All",
-        onPressed: onSelectAll,
-      ),
-      IconButton(
         icon: Icon(Icons.move_to_inbox),
         tooltip: "Move",
         onPressed: onMove,
+      ),
+      IconButton(
+        icon: Icon(Icons.select_all),
+        tooltip: "Select All",
+        onPressed: onSelectAll,
       ),
       IconButton(
         icon: Icon(Icons.delete),
@@ -56,7 +56,10 @@ class CustomAppBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return SliverAppBar(
       title: Text(selectionMode ? "$selectionCount selected" : "Words"),
-      backgroundColor: !selectionMode ? Theme.of(context).primaryColor : Color(0xFF363640),
+      backgroundColor: !selectionMode
+          ? Theme.of(context).primaryColor
+          : Theme.of(context).accentColor,
+      //Color(0xFF363640),
       centerTitle: !selectionMode,
       floating: !selectionMode,
       snap: !selectionMode,

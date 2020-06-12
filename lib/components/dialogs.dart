@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:learningwords/components/labeled_radio.dart';
-import 'package:learningwords/models/item.dart';
 
 class StateDialog extends StatefulWidget {
   final Function onConfirm;
@@ -29,11 +28,11 @@ class _StateDialogState extends State<StateDialog> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: states.map((s) {
-            return LabeledRadio<LearnState>(
+            return LabeledRadio<String>(
               label: s,
-              value: LearnState.values[states.indexOf(s)],
+              value: s,
               groupValue: _state,
-              onChanged: (LearnState value) {
+              onChanged: (String value) {
                 setState(() => _state = value);
               },
             );
@@ -53,7 +52,7 @@ class _StateDialogState extends State<StateDialog> {
           onPressed: () {
             var index = 0;
             if (_state != null) {
-              index = LearnState.values.indexOf(_state);
+              index = states.indexOf(_state);
             }
             widget.onConfirm(_state, index);
             Navigator.pop(context);

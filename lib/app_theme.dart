@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 class AppTheme {
   AppTheme._();
 
-  static TextTheme textTheme = TextTheme(
+  static TextTheme _textTheme = TextTheme(
     headline1: GoogleFonts.roboto(
         fontSize: 96, fontWeight: FontWeight.w300, letterSpacing: -1.5),
     headline2: GoogleFonts.roboto(
@@ -31,38 +31,37 @@ class AppTheme {
         fontSize: 10, fontWeight: FontWeight.w400, letterSpacing: 1.5),
   );
 
+  static final TabBarTheme _tabBarTheme = TabBarTheme(
+    indicator: BoxDecoration(
+      color: Colors.transparent.withOpacity(0.2),
+      borderRadius: BorderRadius.circular(50),
+    ),
+    labelColor: Colors.white,
+    labelPadding: const EdgeInsets.symmetric(horizontal: 8.0),
+    labelStyle: const TextStyle(fontWeight: FontWeight.w600),
+    unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w600),
+  );
+
+  static final InputDecorationTheme _inputTheme = const InputDecorationTheme(
+    border: const UnderlineInputBorder(),
+    filled: false,
+  );
+
   static final ThemeData lightTheme = ThemeData(
     primarySwatch: Colors.teal,
-    accentColor: Colors.amberAccent,
-    tabBarTheme: TabBarTheme(
-      indicator: BoxDecoration(
-        color: Colors.transparent.withOpacity(0.2),
-        borderRadius: BorderRadius.circular(50),
-      ),
-      labelColor: Colors.white,
-      labelPadding: const EdgeInsets.symmetric(horizontal: 8.0),
-      labelStyle: const TextStyle(fontWeight: FontWeight.w600),
-      unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w500),
-    ),
-    inputDecorationTheme: const InputDecorationTheme(
-      border: const UnderlineInputBorder(),
-      filled: false,
-    ),
-    textTheme: textTheme,
+    accentColor: Colors.redAccent,
+    tabBarTheme: _tabBarTheme,
+    inputDecorationTheme: _inputTheme,
+    textTheme: _textTheme,
     visualDensity: VisualDensity.adaptivePlatformDensity,
   );
 
-  static final ThemeData darkTheme = ThemeData.dark().copyWith(
+  static final ThemeData darkTheme = ThemeData(
+    primaryColor: Colors.grey[900],
     accentColor: Colors.teal[400],
-    tabBarTheme: TabBarTheme(
-      indicator: BoxDecoration(
-        color: Colors.transparent.withOpacity(0.6),
-        borderRadius: BorderRadius.circular(50),
-      ),
-      labelColor: Colors.white,
-      labelPadding: const EdgeInsets.symmetric(horizontal: 8.0),
-      labelStyle: const TextStyle(fontWeight: FontWeight.w600),
-      unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w500),
-    ),
+    scaffoldBackgroundColor: Colors.grey[800],
+    inputDecorationTheme: _inputTheme,
+    tabBarTheme: _tabBarTheme,
+    textTheme: _textTheme,
   );
 }

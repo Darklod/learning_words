@@ -1,6 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:learningwords/components/custom_appbar.dart';
+import 'package:learningwords/components/custom_drawer.dart';
 import 'package:learningwords/components/dialogs.dart';
 import 'package:learningwords/components/items/item_list.dart';
 import 'package:learningwords/data_search.dart';
@@ -30,6 +32,17 @@ class _HomePageState extends State<HomePage>
     super.dispose();
   }
 
+  // TODO: gestire meglio l'ordine delle tab nei vari file
+  // TODO: select all from the current tab ??
+  // TODO: gestire le tabs con redux???
+  // TODO: aggiungere il numero di elementi !!!
+  // TODO: switch light/dark theme
+  // TODO: ricerca
+  // TODO: provare a cambiare i list_item
+  // TODO: tema scuro: blu-nerissimo e teal e bianco (https://dribbble.com/shots/9150888-Project-Management-App-Concept-2/attachments/1197627?mode=media)
+  // TODO: https://pub.dev/packages/swipeable_card (per le review)
+  // TODO: sorting con bottomsheet -> vedi google drive
+
   Future<bool> _onBack(ViewModel model) {
     if (model.selectionMode) {
       model.selectAll(false);
@@ -37,9 +50,6 @@ class _HomePageState extends State<HomePage>
     }
     return Future.value(true);
   }
-
-  // TODO: gestire meglio l'ordine delle tab nei vari file
-  // TODO: select all from the current tab ??
 
   void _onMove(ViewModel model) {
     showDialog(
@@ -88,7 +98,7 @@ class _HomePageState extends State<HomePage>
           child: DefaultTabController(
             length: 3,
             child: Scaffold(
-              drawer: Drawer(),
+              drawer: CustomDrawer(),
               body: NestedScrollView(
                 headerSliverBuilder: (BuildContext context, _) {
                   return <Widget>[
@@ -111,23 +121,62 @@ class _HomePageState extends State<HomePage>
                   controller: _controller,
                   physics: _physics(vm.selectionMode),
                   children: [
-                    WordList(vm, vm.learnedItems, Colors.blue[400]),
+                    SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          Container(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(vm.learnedItems.length.toString(),
+                                    style:
+                                        Theme.of(context).textTheme.subtitle1),
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Icon(Icons.arrow_downward, size: 18),
+                                    Text(
+                                      "名前",
+                                      style:
+                                          Theme.of(context).textTheme.subtitle1,
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            padding: EdgeInsets.all(16.0).copyWith(bottom: 0),
+                          ),
+                          WordList(
+                            vm,
+                            vm.learnedItems,
+                            Colors.blue[400],
+                          ),
+                        ],
+                      ),
+                    ),
                     WordList(vm, vm.learningItems, Colors.amber[300]),
                     WordList(vm, vm.toLearnItems, Colors.green[300]),
                   ],
                 ),
               ),
-              floatingActionButton: FloatingActionButton(
-                child: Icon(Icons.add),
-                onPressed: () {
-                  vm.selectAll(false);
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (_) => AddPage(onAddItem: vm.onAddItem),
+              floatingActionButton: vm.selectionMode
+                  ? null
+                  : FloatingActionButton.extended(
+                      icon: Icon(Icons.add),
+                      label: Text("Insert"),
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                      ),
+                      onPressed: () {
+                        vm.selectAll(false);
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (_) => AddPage(onAddItem: vm.onAddItem),
+                          ),
+                        );
+                      },
                     ),
-                  );
-                },
-              ),
             ),
           ),
         );

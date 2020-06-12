@@ -10,7 +10,7 @@ class ViewModel {
   final List<Item> learningItems;
   final Function(Item) onAddItem;
   final Function() onDelete;
-  final Function(LearnState) onMove;
+  final Function(String) onMove;
   final Function(Item, bool) selectItem;
   final Function(bool) selectAll;
   final int selectionCount;
@@ -53,11 +53,11 @@ class ViewModel {
       store.dispatch(RemoveItemsAction(_selectedItems));
     }
 
-    _onMove(LearnState newState) {
+    _onMove(String newState) {
       store.dispatch(MoveItemsAction(_selectedItems, newState));
     }
 
-    _filterByState(List<Item> items, LearnState state) {
+    _filterByState(List<Item> items, String state) {
       return items.where((i) => i.state == state).toList();
     }
 
@@ -65,9 +65,9 @@ class ViewModel {
       items: store.state.items,
       selectionCount: _selectedItems.length,
       selectionMode: _selectedItems.length > 0,
-      learnedItems: _filterByState(store.state.items, LearnState.Learned),
-      learningItems: _filterByState(store.state.items, LearnState.Learning),
-      toLearnItems: _filterByState(store.state.items, LearnState.ToLearn),
+      learnedItems: _filterByState(store.state.items, "Learned"),
+      learningItems: _filterByState(store.state.items, "Learning"),
+      toLearnItems: _filterByState(store.state.items, "To Learn"),
       onAddItem: _onAddItem,
       onDelete: _onDelete,
       onMove: _onMove,
