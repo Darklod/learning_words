@@ -12,9 +12,9 @@ class CustomTabBar extends StatelessWidget implements PreferredSizeWidget {
       child: TabBar(
         controller: controller,
         tabs: [
-          const Tab(text: "習った"),
-          const Tab(text: "習っている"),
           const Tab(text: "習らう"),
+          const Tab(text: "習っている"),
+          const Tab(text: "習った"),
         ],
       ),
     );

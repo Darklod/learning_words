@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:learningwords/app_theme.dart';
+import 'package:learningwords/redux/actions/settings.dart';
 import 'package:learningwords/models/app_state.dart';
-import 'package:learningwords/redux/actions.dart';
 import 'package:redux/redux.dart';
 
 class CustomDrawer extends StatelessWidget {

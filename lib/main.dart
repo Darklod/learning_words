@@ -1,23 +1,19 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:learningwords/pages/home.dart';
-
-import 'package:learningwords/redux/actions.dart';
-import 'package:learningwords/redux/reducers.dart';
-
-import 'package:redux/redux.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:learningwords/models/item.dart';
+import 'package:learningwords/redux/actions/item.dart';
+import 'package:learningwords/models/app_state.dart';
+import 'package:learningwords/redux/store.dart';
+import 'package:learningwords/routes.dart';
+import 'package:redux/redux.dart';
 
-import 'models/app_state.dart';
+void main() => runApp(App(store: createStore()));
 
-void main() {
-  runApp(MyApp());
-}
+class App extends StatelessWidget {
+  final Store<AppState> store;
 
-class MyApp extends StatelessWidget {
-  final store = Store<AppState>(
-    appStateReducer,
-    initialState: AppState.initialState(),
-  );
+  const App({Key key, this.store}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -25,17 +21,14 @@ class MyApp extends StatelessWidget {
       store: store,
       child: StoreConnector<AppState, _ViewModel>(
         converter: (Store<AppState> store) => _ViewModel.create(store),
+        onInit: (store) => store.dispatch(GetItemsAction()),
         builder: (BuildContext context, _ViewModel vm) {
           return MaterialApp(
             title: 'Words',
             locale: Locale('ja', 'JP'),
             theme: vm.themeData,
-            home: StoreBuilder<AppState>(
-              onInit: (store) => store.dispatch(GetItemsAction()),
-              builder: (BuildContext context, Store<AppState> store) {
-                return HomePage();
-              },
-            ),
+            initialRoute: homeRoute,
+            onGenerateRoute: Router.generateRoute,
           );
         },
       ),
@@ -49,8 +42,6 @@ class _ViewModel {
   _ViewModel({this.themeData});
 
   factory _ViewModel.create(Store<AppState> store) {
-    return _ViewModel(
-      themeData: store.state.themeData,
-    );
+    return _ViewModel(themeData: store.state.themeData);
   }
 }

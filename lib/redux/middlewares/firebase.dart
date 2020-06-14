@@ -3,7 +3,7 @@ import 'package:redux/redux.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:todo/model/model.dart';
-import 'package:todo/redux/actions.dart';
+import 'package:todo/redux/item.dart';
 
 List<Middleware<AppState>> appStateMiddleware([
   AppState state = const AppState(items: [])

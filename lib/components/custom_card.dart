@@ -10,14 +10,12 @@ class CustomCard extends StatelessWidget {
   final Color backgroundColor;
   final Color secondaryColor;
   final Position position;
-  final Widget label;
 
   CustomCard({
     @required this.child,
     this.backgroundColor = Colors.white,
     this.secondaryColor = Colors.blue,
     this.position = Position.bottom,
-    this.label,
   });
 
   double get borderSize => 6.0;
@@ -37,23 +35,18 @@ class CustomCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(radius),
       ),
       child: Container(
-        padding: EdgeInsets.only(bottom: bottomSize, top: topSize),
-        decoration: BoxDecoration(
-          color: secondaryColor,
-          borderRadius: BorderRadius.circular(radius),
-        ),
-        child: Stack(
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                color: backgroundColor,
-                borderRadius: BorderRadius.circular(radius),
-              ),
-              padding: const EdgeInsets.all(16.0),
-              child: child,
-            ),
-            if (label != null) label,
-          ],
+//        padding: EdgeInsets.only(bottom: bottomSize, top: topSize),
+//        decoration: BoxDecoration(
+//          color: secondaryColor,
+//          borderRadius: BorderRadius.circular(radius),
+//        ),
+        child: Container(
+          decoration: BoxDecoration(
+            color: backgroundColor,
+            borderRadius: BorderRadius.circular(radius),
+          ),
+          padding: const EdgeInsets.all(16.0),
+          child: child,
         ),
       ),
     );

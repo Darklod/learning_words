@@ -4,11 +4,11 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:learningwords/components/custom_appbar.dart';
 import 'package:learningwords/components/custom_drawer.dart';
 import 'package:learningwords/components/dialogs.dart';
-import 'package:learningwords/components/items/item_list.dart';
-import 'package:learningwords/data_search.dart';
+import 'package:learningwords/components/items/items_tab.dart';
 import 'package:learningwords/models/app_state.dart';
-import 'package:learningwords/pages/add.dart';
+import 'package:learningwords/models/item.dart';
 import 'package:learningwords/redux/view_model.dart';
+import 'package:learningwords/search.dart';
 import 'package:redux/redux.dart';
 
 class HomePage extends StatefulWidget {
@@ -32,15 +32,22 @@ class _HomePageState extends State<HomePage>
     super.dispose();
   }
 
-  // TODO: gestire meglio l'ordine delle tab nei vari file
+  // TODO: ricordati che dopo 30 giorni bisogna sistemare firebase
+
+  // TODO: errore id, su firebase hanno id diversi sull'app uguali?
+  // TODO: limite elementi da cancellare -> batch?
+  // TODO: sistemare meglio firebase
+
+  // TODO: i settings su prefs
+
+  // TODO: furigana
   // TODO: select all from the current tab ??
   // TODO: gestire le tabs con redux???
-  // TODO: aggiungere il numero di elementi !!!
-  // TODO: switch light/dark theme
   // TODO: ricerca
   // TODO: provare a cambiare i list_item
   // TODO: tema scuro: blu-nerissimo e teal e bianco (https://dribbble.com/shots/9150888-Project-Management-App-Concept-2/attachments/1197627?mode=media)
   // TODO: https://pub.dev/packages/swipeable_card (per le review)
+  // TODO: https://pub.dev/packages/fluro ??
   // TODO: sorting con bottomsheet -> vedi google drive
 
   Future<bool> _onBack(ViewModel model) {
@@ -110,10 +117,12 @@ class _HomePageState extends State<HomePage>
                       onClearSelection: () => vm.selectAll(false),
                       onDelete: () => _onDelete(vm),
                       onMove: () => _onMove(vm),
-                      onSearch: () => showSearch(
-                        context: context,
-                        delegate: DataSearch(vm.items),
-                      ),
+                      onSearch: () {
+                        showSearch(
+                          context: context,
+                          delegate: DataSearch(vm.items),
+                        );
+                      },
                     )
                   ];
                 },
@@ -121,41 +130,21 @@ class _HomePageState extends State<HomePage>
                   controller: _controller,
                   physics: _physics(vm.selectionMode),
                   children: [
-                    SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          Container(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(vm.learnedItems.length.toString(),
-                                    style:
-                                        Theme.of(context).textTheme.subtitle1),
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Icon(Icons.arrow_downward, size: 18),
-                                    Text(
-                                      "名前",
-                                      style:
-                                          Theme.of(context).textTheme.subtitle1,
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                            padding: EdgeInsets.all(16.0).copyWith(bottom: 0),
-                          ),
-                          WordList(
-                            vm,
-                            vm.learnedItems,
-                            Colors.blue[400],
-                          ),
-                        ],
-                      ),
+                    ItemsTab(
+                      model: vm,
+                      items: vm.toLearnItems,
+                      color: Colors.green[400],
                     ),
-                    WordList(vm, vm.learningItems, Colors.amber[300]),
-                    WordList(vm, vm.toLearnItems, Colors.green[300]),
+                    ItemsTab(
+                      model: vm,
+                      items: vm.learningItems,
+                      color: Colors.amber[400],
+                    ),
+                    ItemsTab(
+                      model: vm,
+                      items: vm.learnedItems,
+                      color: Colors.blue[400],
+                    ),
                   ],
                 ),
               ),
@@ -170,10 +159,10 @@ class _HomePageState extends State<HomePage>
                       ),
                       onPressed: () {
                         vm.selectAll(false);
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (_) => AddPage(onAddItem: vm.onAddItem),
-                          ),
+                        Navigator.pushNamed(
+                          context,
+                          "/add",
+                          arguments: {"onAddItem": vm.onAddItem},
                         );
                       },
                     ),

@@ -23,7 +23,7 @@ class Item {
       : id = "",
         kanji = "",
         kana = "",
-        state = "",
+        state = "To Learn",
         jlpt = "none",
         translation = "",
         isSelected = false;
@@ -58,7 +58,7 @@ class Item {
     );
   }
 
-  Map toJson() {
+  Map<String, dynamic> toJson() {
     return {
       "id": id,
       "kanji": kanji,

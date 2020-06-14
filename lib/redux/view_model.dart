@@ -1,6 +1,6 @@
-import 'package:redux/redux.dart';
-import 'package:learningwords/redux/actions.dart';
+import 'package:learningwords/redux/actions/item.dart';
 import 'package:learningwords/models/app_state.dart';
+import 'package:redux/redux.dart';
 import 'package:learningwords/models/item.dart';
 
 class ViewModel {
