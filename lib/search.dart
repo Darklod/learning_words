@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:learningwords/models/item.dart';
+import 'package:learningwords/models/word.dart';
 
 class DataSearch extends SearchDelegate<String> {
-  final List<Item> list;
+  final List<Word> list;
 
   DataSearch(this.list);
 

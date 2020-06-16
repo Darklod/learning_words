@@ -1,71 +1,79 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:learningwords/models/item.dart';
+import 'package:learningwords/models/word.dart';
 import 'package:learningwords/redux/actions/errors_actions.dart';
-import 'package:learningwords/redux/actions/items_actions.dart';
+import 'package:learningwords/redux/actions/words_actions.dart';
 import 'package:learningwords/redux/state/app_state.dart';
 import 'package:redux/redux.dart';
 import 'package:redux_thunk/redux_thunk.dart';
 
-final _collection = Firestore.instance.collection("items");
+final _collection = Firestore.instance.collection("words");
 
 StreamSubscription<QuerySnapshot> _stream;
 
-ThunkAction<AppState> initItemsListener() {
+ThunkAction<AppState> initWordsListener() {
   return (Store<AppState> store) async {
-    _stream = _collection.snapshots().listen((event) {
-      event.documentChanges.forEach((_) async {
-        await store.dispatch(getItems());
-      });
-    });
+    _stream = _collection.snapshots().listen(
+      (event) {
+        if (event.documentChanges.length > 0) {
+          store.dispatch(getWords());
+        }
+      },
+      onDone: () {
+        print("onDone");
+      },
+      onError: (error) {
+        print("onError");
+        store.dispatch(
+          ErrorOccurredAction("Firebase Error: " + error.toString()),
+        );
+      },
+    );
 
-    await store.dispatch(getItems());
+    await store.dispatch(getWords());
   };
 }
 
-ThunkAction<AppState> closeItemsListener() {
+ThunkAction<AppState> closeWordsListener() {
   return (Store<AppState> store) async {
     await _stream.cancel();
   };
 }
 
-ThunkAction<AppState> getItems() {
+ThunkAction<AppState> getWords() {
   return (Store<AppState> store) async {
     //await store.dispatch(checkInternetConnection());
-    await store.dispatch(LoadingItemsAction());
+    await store.dispatch(LoadingWordsAction());
 
     try {
       final snapshot = await _collection.getDocuments();
-      final items =
-          snapshot.documents.map((d) => Item.fromSnapshot(d)).toList();
-      await store.dispatch(LoadedItemsAction(items));
+      final words =
+          snapshot.documents.map((d) => Word.fromSnapshot(d)).toList();
+
+      await store.dispatch(LoadedWordsAction(words));
     } catch (e) {
       await store.dispatch(ErrorOccurredAction(e.toString()));
     }
-
-    // TODO: if error dispatch(ErrorAction(message));
-    // TODO:  set error state (message, blah, ..., error: true)
-    // TODO:  view -> if store.state.error -> show something (SnakeBar)
   };
 }
 
-ThunkAction<AppState> addItem(Item item) {
+ThunkAction<AppState> addWord(Word word) {
   return (Store<AppState> store) async {
     // await store.dispatch(checkInternetConnection());
 
-    final DocumentReference ref = await _collection.add(item.toJson());
+    final DocumentReference ref = await _collection.add(word.toJson());
     ref..updateData({"id": ref.documentID});
 
-    await store.dispatch(getItems());
+    await store.dispatch(getWords());
   };
 }
 
-ThunkAction<AppState> deleteItems(List<Item> items) {
+ThunkAction<AppState> deleteWords(List<Word> words) {
   return (Store<AppState> store) async {
     // await store.dispatch(checkInternetConnection());
 
-    final List<String> ids = items.map((item) => item.id).toList();
+    final List<String> ids = words.map((word) => word.id).toList();
 
     ids.forEach((String id) async {
       DocumentSnapshot snapshot = await _collection.document(id).get();
@@ -74,15 +82,15 @@ ThunkAction<AppState> deleteItems(List<Item> items) {
       }
     });
 
-    await store.dispatch(getItems());
+    await store.dispatch(getWords());
   };
 }
 
-ThunkAction<AppState> moveItems(List<Item> items, String newState) {
+ThunkAction<AppState> moveWords(List<Word> words, String newState) {
   return (Store<AppState> store) async {
     // await store.dispatch(checkInternetConnection());
 
-    final List<String> ids = items.map((item) => item.id).toList();
+    final List<String> ids = words.map((word) => word.id).toList();
 
     ids.forEach((String id) async {
       DocumentSnapshot snapshot = await _collection.document(id).get();
@@ -91,6 +99,6 @@ ThunkAction<AppState> moveItems(List<Item> items, String newState) {
       }
     });
 
-    await store.dispatch(getItems());
+    await store.dispatch(getWords());
   };
 }

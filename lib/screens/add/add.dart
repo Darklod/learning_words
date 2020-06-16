@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:learningwords/components/add/invisible_appbar.dart';
-import 'package:learningwords/components/level/level.dart';
-import 'package:learningwords/components/level/level_field.dart';
-import 'package:learningwords/components/add/scrollable_footer.dart';
-import 'package:learningwords/components/add/section_field.dart';
-import 'package:learningwords/models/item.dart';
+import 'package:learningwords/models/word.dart';
 import 'package:learningwords/redux/state/app_state.dart';
-import 'package:learningwords/redux/thunk/items_middlewares.dart';
+import 'package:learningwords/redux/thunk/words_middlewares.dart';
+import 'package:learningwords/screens/add/widgets/invisible_appbar.dart';
+import 'package:learningwords/screens/add/widgets/scrollable_footer.dart';
+import 'package:learningwords/screens/add/widgets/section_field.dart';
+import 'package:learningwords/widgets/level/level.dart';
+import 'package:learningwords/widgets/level/level_field.dart';
 
 class AddPage extends StatefulWidget {
   @override
@@ -17,16 +17,14 @@ class AddPage extends StatefulWidget {
 class _AddPageState extends State<AddPage> {
   final _formKey = GlobalKey<FormState>();
 
-  var _item = Item.empty();
+  var _item = Word.empty();
 
   _onSave() {
-    final form = _formKey.currentState;
-    if (form.validate()) {
-      form.save();
-      //widget.onAddItem(_item);
+    final store = StoreProvider.of<AppState>(context);
 
-      StoreProvider.of<AppState>(context).dispatch(addItem(_item));
-
+    if (_formKey.currentState.validate()) {
+      _formKey.currentState.save();
+      store.dispatch(addWord(_item));
       Navigator.pop(context);
     }
   }

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:learningwords/components/items/list_item.dart';
-import 'package:learningwords/models/item.dart';
+import 'package:learningwords/models/word.dart';
+import 'package:learningwords/widgets/words/list_item.dart';
 
 class WordList extends StatelessWidget {
   final Color color;
-  final List<Item> list;
+  final List<Word> list;
   final bool selectionMode;
-  final Function(Item, bool) selectItem;
+  final Function(Word, bool) selectItem;
 
   WordList(this.list, this.color, this.selectionMode, this.selectItem);
 

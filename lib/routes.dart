@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:learningwords/pages/add.dart';
-import 'package:learningwords/pages/home.dart';
+import 'package:learningwords/screens/add/add.dart';
+import 'package:learningwords/screens/home/home.dart';
 
 const String homeRoute = '/';
 const String addRoute = '/add';

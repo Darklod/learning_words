@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:learningwords/components/add/labeled_radio.dart';
+import 'package:learningwords/screens/add/widgets/labeled_radio.dart';
+import 'package:learningwords/widgets/dialogs/custom_action.dart';
 
 class StateDialog extends StatefulWidget {
   final Function onConfirm;
@@ -40,13 +41,13 @@ class _StateDialogState extends State<StateDialog> {
         ),
       ),
       actions: <Widget>[
-        _CustomAction(
+        CustomDialogAction(
           title: "CANCEL",
           onPressed: () {
             Navigator.pop(context);
           },
         ),
-        _CustomAction(
+        CustomDialogAction(
           title: "CONFIRM",
           enabled: _state != null,
           onPressed: () {
@@ -59,63 +60,6 @@ class _StateDialogState extends State<StateDialog> {
           },
         )
       ],
-    );
-  }
-}
-
-class DeleteDialog extends StatelessWidget {
-  final Function onConfirm;
-
-  const DeleteDialog({Key key, this.onConfirm}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      shape: const RoundedRectangleBorder(
-        borderRadius: const BorderRadius.all(Radius.circular(8)),
-      ),
-      title: const Text('Confirm Delete'),
-      content: const Text("Are you sure you want to delete selected words?"),
-      actions: [
-        _CustomAction(
-          title: "CANCEL",
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-        _CustomAction(
-          title: "OK",
-          onPressed: () {
-            onConfirm();
-            Navigator.of(context).pop();
-          },
-        ),
-      ],
-    );
-  }
-}
-
-class _CustomAction extends StatelessWidget {
-  final String title;
-  final bool enabled;
-  final Function onPressed;
-
-  const _CustomAction({
-    Key key,
-    this.title,
-    this.onPressed,
-    this.enabled = true,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return FlatButton(
-      onPressed: enabled ? onPressed : null,
-      padding: const EdgeInsets.all(8.0),
-      shape: const RoundedRectangleBorder(
-        borderRadius: const BorderRadius.all(Radius.circular(8)),
-      ),
-      child: Text(title),
     );
   }
 }

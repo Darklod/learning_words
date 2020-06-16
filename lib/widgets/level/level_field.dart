@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:learningwords/components/level/level.dart';
-import 'package:learningwords/components/level/level_item.dart';
+import 'package:learningwords/widgets/level/level.dart';
+import 'package:learningwords/widgets/level/level_item.dart';
 
 class LevelField extends StatefulWidget {
   final List<Level> levels;

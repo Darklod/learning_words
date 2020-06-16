@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:learningwords/components/home/custom_tabbar.dart';
+import 'package:learningwords/screens/home/widgets/custom_tabbar.dart';
 
 class CustomAppBar extends StatelessWidget {
   final bool selectionMode;
@@ -55,11 +55,10 @@ class CustomAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
-      title: Text(selectionMode ? "$selectionCount selected" : "Words"),
+      title: Text(selectionMode ? "$selectionCount selected" : "Words Storage"),
       backgroundColor: !selectionMode
           ? Theme.of(context).primaryColor
           : Theme.of(context).accentColor,
-      //Color(0xFF363640),
       centerTitle: !selectionMode,
       floating: !selectionMode,
       snap: !selectionMode,

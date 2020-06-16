@@ -6,7 +6,7 @@ import 'package:learningwords/app_theme.dart';
 class SettingsState {
   final ThemeData themeData;
 
-  const SettingsState({this.themeData});
+  const SettingsState({@required this.themeData});
 
   SettingsState.initial() : themeData = AppTheme.lightTheme;
 

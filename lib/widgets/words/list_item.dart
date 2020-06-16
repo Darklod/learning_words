@@ -1,13 +1,13 @@
 import 'package:flip_card/flip_card.dart';
 import 'package:flutter/material.dart';
-import 'package:learningwords/components/custom_card.dart';
-import 'package:learningwords/models/item.dart';
+import 'package:learningwords/models/word.dart';
+import 'package:learningwords/widgets/custom_card.dart';
 
 class ListItem extends StatefulWidget {
-  final Item item;
+  final Word item;
   final Color color;
   final bool selectionMode;
-  final Function(Item, bool) selectItem;
+  final Function(Word, bool) selectItem;
 
   ListItem({
     @required this.item,
@@ -21,7 +21,7 @@ class ListItem extends StatefulWidget {
 }
 
 class _ListItemState extends State<ListItem> {
-  Item get item => widget.item;
+  Word get item => widget.item;
 
   Color get color => widget.color;
 

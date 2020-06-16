@@ -5,7 +5,7 @@ class ErrorState {
   final bool error;
   final String message;
 
-  const ErrorState({this.error, this.message});
+  const ErrorState({@required this.error, @required this.message});
 
   ErrorState.initial()
       : error = false,

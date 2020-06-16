@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-class Item {
+class Word {
   final String id;
   final String kanji;
   final String kana;
@@ -10,7 +10,7 @@ class Item {
   final String state;
   final bool isSelected;
 
-  const Item({
+  const Word({
     @required this.id,
     @required this.kanji,
     @required this.kana,
@@ -20,7 +20,7 @@ class Item {
     this.isSelected = false,
   });
 
-  Item.empty()
+  Word.empty()
       : id = "",
         kanji = "",
         kana = "",
@@ -29,7 +29,7 @@ class Item {
         translation = "",
         isSelected = false;
 
-  Item copyWith({
+  Word copyWith({
     String kanji,
     String kana,
     String translation,
@@ -37,7 +37,7 @@ class Item {
     String jlpt,
     bool isSelected,
   }) {
-    return Item(
+    return Word(
       id: id ?? this.id,
       kanji: kanji ?? this.kanji,
       kana: kana ?? this.kana,
@@ -48,8 +48,8 @@ class Item {
     );
   }
 
-  factory Item.fromJson(Map json) {
-    return Item(
+  factory Word.fromJson(Map json) {
+    return Word(
       id: json["id"] ?? "",
       kanji: json["kanji"] ?? "",
       kana: json["kana"] ?? "",
@@ -59,8 +59,8 @@ class Item {
     );
   }
 
-  factory Item.fromSnapshot(DocumentSnapshot snapshot) {
-    return Item.fromJson(snapshot.data);
+  factory Word.fromSnapshot(DocumentSnapshot snapshot) {
+    return Word.fromJson(snapshot.data);
   }
 
   Map<String, dynamic> toJson() {
