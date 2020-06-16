@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:learningwords/components/labeled_radio.dart';
+import 'package:learningwords/components/add/labeled_radio.dart';
 
 class StateDialog extends StatefulWidget {
   final Function onConfirm;

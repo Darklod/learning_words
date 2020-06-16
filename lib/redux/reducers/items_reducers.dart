@@ -1,5 +1,5 @@
 import 'package:learningwords/models/item.dart';
-import 'package:learningwords/redux/actions/item.dart';
+import 'package:learningwords/redux/actions/items_actions.dart';
 import 'package:redux/redux.dart';
 
 Reducer<List<Item>> itemReducer = combineReducers<List<Item>>([

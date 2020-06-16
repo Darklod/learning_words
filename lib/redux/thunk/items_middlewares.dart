@@ -2,8 +2,9 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:learningwords/models/item.dart';
-import 'package:learningwords/redux/actions/item.dart';
-import 'package:learningwords/models/app_state.dart';
+import 'package:learningwords/redux/actions/errors_actions.dart';
+import 'package:learningwords/redux/actions/items_actions.dart';
+import 'package:learningwords/redux/state/app_state.dart';
 import 'package:redux/redux.dart';
 import 'package:redux_thunk/redux_thunk.dart';
 
@@ -31,17 +32,28 @@ ThunkAction<AppState> closeItemsListener() {
 
 ThunkAction<AppState> getItems() {
   return (Store<AppState> store) async {
-    store.dispatch(LoadingItemsAction());
+    //await store.dispatch(checkInternetConnection());
+    await store.dispatch(LoadingItemsAction());
 
-    final snapshot = await _collection.getDocuments();
-    final items = snapshot.documents.map((d) => Item.fromSnapshot(d)).toList();
+    try {
+      final snapshot = await _collection.getDocuments();
+      final items =
+          snapshot.documents.map((d) => Item.fromSnapshot(d)).toList();
+      await store.dispatch(LoadedItemsAction(items));
+    } catch (e) {
+      await store.dispatch(ErrorOccurredAction(e.toString()));
+    }
 
-    await store.dispatch(LoadedItemsAction(items));
+    // TODO: if error dispatch(ErrorAction(message));
+    // TODO:  set error state (message, blah, ..., error: true)
+    // TODO:  view -> if store.state.error -> show something (SnakeBar)
   };
 }
 
 ThunkAction<AppState> addItem(Item item) {
   return (Store<AppState> store) async {
+    // await store.dispatch(checkInternetConnection());
+
     final DocumentReference ref = await _collection.add(item.toJson());
     ref..updateData({"id": ref.documentID});
 
@@ -51,17 +63,15 @@ ThunkAction<AppState> addItem(Item item) {
 
 ThunkAction<AppState> deleteItems(List<Item> items) {
   return (Store<AppState> store) async {
+    // await store.dispatch(checkInternetConnection());
+
     final List<String> ids = items.map((item) => item.id).toList();
 
-    // TODO: combine snapshots
     ids.forEach((String id) async {
-
-    });
-
-    final snapshot = await _collection.where("id", whereIn: ids).getDocuments();
-
-    snapshot.documents.forEach((DocumentSnapshot d) async {
-      await d.reference.delete();
+      DocumentSnapshot snapshot = await _collection.document(id).get();
+      if (snapshot.exists) {
+        await snapshot.reference.delete();
+      }
     });
 
     await store.dispatch(getItems());
@@ -70,12 +80,15 @@ ThunkAction<AppState> deleteItems(List<Item> items) {
 
 ThunkAction<AppState> moveItems(List<Item> items, String newState) {
   return (Store<AppState> store) async {
+    // await store.dispatch(checkInternetConnection());
+
     final List<String> ids = items.map((item) => item.id).toList();
 
-    final snapshot = await _collection.where("id", whereIn: ids).getDocuments();
-
-    snapshot.documents.forEach((DocumentSnapshot d) async {
-      await d.reference.updateData({"state": newState});
+    ids.forEach((String id) async {
+      DocumentSnapshot snapshot = await _collection.document(id).get();
+      if (snapshot.exists) {
+        await snapshot.reference.updateData({"state": newState});
+      }
     });
 
     await store.dispatch(getItems());

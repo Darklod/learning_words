@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:learningwords/components/custom_tabbar.dart';
+import 'package:learningwords/components/home/custom_tabbar.dart';
 
 class CustomAppBar extends StatelessWidget {
   final bool selectionMode;

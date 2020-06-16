@@ -1,11 +1,11 @@
 import 'dart:convert';
 
-import 'package:learningwords/redux/actions/item.dart';
-import 'package:learningwords/models/app_state.dart';
+import 'package:learningwords/redux/state/app_state.dart';
 import 'package:redux/redux.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // Non mi serve salvare la lista su disco
+// TODO: settings
 
 void saveToPrefs(AppState state) async {
   SharedPreferences preferences = await SharedPreferences.getInstance();

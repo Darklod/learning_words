@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:learningwords/components/invisible_appbar.dart';
+import 'package:learningwords/components/add/invisible_appbar.dart';
 import 'package:learningwords/components/level/level.dart';
 import 'package:learningwords/components/level/level_field.dart';
-import 'package:learningwords/components/scrollable_footer.dart';
-import 'package:learningwords/components/section_field.dart';
-import 'package:learningwords/models/app_state.dart';
+import 'package:learningwords/components/add/scrollable_footer.dart';
+import 'package:learningwords/components/add/section_field.dart';
 import 'package:learningwords/models/item.dart';
-import 'package:learningwords/redux/middlewares/item.dart';
+import 'package:learningwords/redux/state/app_state.dart';
+import 'package:learningwords/redux/thunk/items_middlewares.dart';
 
 class AddPage extends StatefulWidget {
   @override

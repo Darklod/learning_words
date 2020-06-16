@@ -1,15 +1,14 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:learningwords/components/custom_appbar.dart';
+import 'package:learningwords/components/home/custom_appbar.dart';
 import 'package:learningwords/components/custom_drawer.dart';
 import 'package:learningwords/components/dialogs.dart';
 import 'package:learningwords/components/home/custom_fab.dart';
 import 'package:learningwords/components/items/items_tab.dart';
-import 'package:learningwords/models/app_state.dart';
 import 'package:learningwords/models/item.dart';
-import 'package:learningwords/redux/actions/item.dart';
-import 'package:learningwords/redux/middlewares/item.dart';
+import 'package:learningwords/redux/actions/items_actions.dart';
+import 'package:learningwords/redux/state/app_state.dart';
+import 'package:learningwords/redux/thunk/items_middlewares.dart';
 import 'package:learningwords/search.dart';
 import 'package:redux/redux.dart';
 

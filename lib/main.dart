@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:learningwords/models/app_state.dart';
-import 'package:learningwords/redux/middlewares/item.dart';
+import 'package:learningwords/redux/state/app_state.dart';
 import 'package:learningwords/redux/store.dart';
+import 'package:learningwords/redux/thunk/items_middlewares.dart';
 import 'package:learningwords/routes.dart';
 import 'package:redux/redux.dart';
 
-void main() => runApp(App(store: createStore()));
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(App(store: store));
+}
 
 class App extends StatelessWidget {
   final Store<AppState> store;
@@ -41,6 +44,6 @@ class _ViewModel {
   _ViewModel({this.themeData});
 
   factory _ViewModel.create(Store<AppState> store) {
-    return _ViewModel(themeData: store.state.themeData);
+    return _ViewModel(themeData: store.state.settings.themeData);
   }
 }
