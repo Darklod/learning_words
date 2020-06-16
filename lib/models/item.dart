@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class Item {
@@ -56,6 +57,10 @@ class Item {
       state: json["state"] ?? "",
       jlpt: json["jlpt"] ?? "",
     );
+  }
+
+  factory Item.fromSnapshot(DocumentSnapshot snapshot) {
+    return Item.fromJson(snapshot.data);
   }
 
   Map<String, dynamic> toJson() {

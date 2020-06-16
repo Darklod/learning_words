@@ -29,12 +29,11 @@ void appStateMiddleware(
     Store<AppState> store, action, NextDispatcher next) async {
   next(action);
 
-  if (action is AddItemAction || action is RemoveItemsAction) {
-    saveToPrefs(store.state);
-  }
+  //  if (action is AddItemAction || action is RemoveItemsAction) {
+  //    saveToPrefs(store.state);
+  //  }
 
-  if (action is GetItemsAction) {
-    await loadFromPrefs()
-        .then((state) => store.dispatch(LoadedItemsAction(state.items)));
-  }
+  //　if (action is getE) {
+  //  　await loadFromPrefs().then((state) => store.dispatch(LoadedItemsAction(state.items)));
+  //　}
 }

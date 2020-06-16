@@ -4,10 +4,12 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:learningwords/components/custom_appbar.dart';
 import 'package:learningwords/components/custom_drawer.dart';
 import 'package:learningwords/components/dialogs.dart';
+import 'package:learningwords/components/home/custom_fab.dart';
 import 'package:learningwords/components/items/items_tab.dart';
 import 'package:learningwords/models/app_state.dart';
 import 'package:learningwords/models/item.dart';
-import 'package:learningwords/redux/view_model.dart';
+import 'package:learningwords/redux/actions/item.dart';
+import 'package:learningwords/redux/middlewares/item.dart';
 import 'package:learningwords/search.dart';
 import 'package:redux/redux.dart';
 
@@ -50,7 +52,7 @@ class _HomePageState extends State<HomePage>
   // TODO: https://pub.dev/packages/fluro ??
   // TODO: sorting con bottomsheet -> vedi google drive
 
-  Future<bool> _onBack(ViewModel model) {
+  Future<bool> _onBack(_ViewModel model) {
     if (model.selectionMode) {
       model.selectAll(false);
       return Future.value(false);
@@ -58,7 +60,7 @@ class _HomePageState extends State<HomePage>
     return Future.value(true);
   }
 
-  void _onMove(ViewModel model) {
+  void _onMove(_ViewModel model) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -74,7 +76,7 @@ class _HomePageState extends State<HomePage>
     );
   }
 
-  void _onDelete(ViewModel model) {
+  void _onDelete(_ViewModel model) {
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -97,9 +99,9 @@ class _HomePageState extends State<HomePage>
 
   @override
   Widget build(BuildContext context) {
-    return StoreConnector<AppState, ViewModel>(
-      converter: (Store<AppState> store) => ViewModel.create(store),
-      builder: (BuildContext context, ViewModel vm) {
+    return StoreConnector<AppState, _ViewModel>(
+      converter: (Store<AppState> store) => _ViewModel.create(store),
+      builder: (BuildContext context, _ViewModel vm) {
         return WillPopScope(
           onWillPop: () => _onBack(vm),
           child: DefaultTabController(
@@ -131,45 +133,104 @@ class _HomePageState extends State<HomePage>
                   physics: _physics(vm.selectionMode),
                   children: [
                     ItemsTab(
-                      model: vm,
+                      selectionMode: vm.selectionMode,
+                      selectItem: vm.selectItem,
                       items: vm.toLearnItems,
                       color: Colors.green[400],
                     ),
                     ItemsTab(
-                      model: vm,
+                      selectionMode: vm.selectionMode,
+                      selectItem: vm.selectItem,
                       items: vm.learningItems,
                       color: Colors.amber[400],
                     ),
                     ItemsTab(
-                      model: vm,
+                      selectionMode: vm.selectionMode,
+                      selectItem: vm.selectItem,
                       items: vm.learnedItems,
                       color: Colors.blue[400],
                     ),
                   ],
                 ),
               ),
-              floatingActionButton: vm.selectionMode
-                  ? null
-                  : FloatingActionButton.extended(
-                      icon: Icon(Icons.add),
-                      label: Text("Insert"),
-                      foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                      ),
-                      onPressed: () {
-                        vm.selectAll(false);
-                        Navigator.pushNamed(
-                          context,
-                          "/add",
-                          arguments: {"onAddItem": vm.onAddItem},
-                        );
-                      },
-                    ),
+              floatingActionButton: CustomFAB(
+                selectionMode: vm.selectionMode,
+                onPressed: () {
+                  vm.selectAll(false);
+                  Navigator.pushNamed(context, "/add");
+                },
+              ),
             ),
           ),
         );
       },
+    );
+  }
+}
+
+class _ViewModel {
+  final List<Item> items;
+  final List<Item> learnedItems;
+  final List<Item> toLearnItems;
+  final List<Item> learningItems;
+  final Function() onDelete;
+  final Function(String) onMove;
+  final Function(Item, bool) selectItem;
+  final Function(bool) selectAll;
+  final int selectionCount;
+  final bool selectionMode;
+
+  _ViewModel({
+    this.items, // Search, Home
+    this.selectionMode, // Home, Item
+    this.selectionCount, // Home
+    this.learnedItems, // Home
+    this.toLearnItems, // Home
+    this.learningItems, // Home
+    this.onDelete, // Home
+    this.onMove, // Home
+    this.selectItem, // Item
+    this.selectAll, // Home
+  });
+
+  factory _ViewModel.create(Store<AppState> store) {
+    _filterSelected(List<Item> items) {
+      return items.where((i) => i.isSelected == true).toList();
+    }
+
+    final _selectedItems = _filterSelected(store.state.items);
+
+    _onDelete() {
+      store.dispatch(deleteItems(_selectedItems));
+    }
+
+    _onMove(String newState) {
+      store.dispatch(moveItems(_selectedItems, newState));
+    }
+
+    _onSelectItem(Item item, bool value) {
+      store.dispatch(SelectItemAction(item, value));
+    }
+
+    _onSelectAll(bool value) {
+      store.dispatch(SelectItemsAction(value));
+    }
+
+    _filterByState(List<Item> items, String state) {
+      return items.where((i) => i.state == state).toList();
+    }
+
+    return _ViewModel(
+      items: store.state.items,
+      selectionCount: _selectedItems.length,
+      selectionMode: _selectedItems.length > 0,
+      learnedItems: _filterByState(store.state.items, "Learned"),
+      learningItems: _filterByState(store.state.items, "Learning"),
+      toLearnItems: _filterByState(store.state.items, "To Learn"),
+      onDelete: _onDelete,
+      onMove: _onMove,
+      selectItem: _onSelectItem,
+      selectAll: _onSelectAll,
     );
   }
 }

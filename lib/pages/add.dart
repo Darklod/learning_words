@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:learningwords/components/invisible_appbar.dart';
 import 'package:learningwords/components/level/level.dart';
 import 'package:learningwords/components/level/level_field.dart';
 import 'package:learningwords/components/scrollable_footer.dart';
 import 'package:learningwords/components/section_field.dart';
+import 'package:learningwords/models/app_state.dart';
 import 'package:learningwords/models/item.dart';
+import 'package:learningwords/redux/middlewares/item.dart';
 
 class AddPage extends StatefulWidget {
-  final Function(Item) onAddItem;
-
-  const AddPage({Key key, this.onAddItem}) : super(key: key);
-
   @override
   _AddPageState createState() => _AddPageState();
 }
@@ -24,7 +23,10 @@ class _AddPageState extends State<AddPage> {
     final form = _formKey.currentState;
     if (form.validate()) {
       form.save();
-      widget.onAddItem(_item); // await when firebase
+      //widget.onAddItem(_item);
+
+      StoreProvider.of<AppState>(context).dispatch(addItem(_item));
+
       Navigator.pop(context);
     }
   }

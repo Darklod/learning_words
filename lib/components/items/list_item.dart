@@ -2,17 +2,18 @@ import 'package:flip_card/flip_card.dart';
 import 'package:flutter/material.dart';
 import 'package:learningwords/components/custom_card.dart';
 import 'package:learningwords/models/item.dart';
-import 'package:learningwords/redux/view_model.dart';
 
 class ListItem extends StatefulWidget {
   final Item item;
   final Color color;
-  final ViewModel model;
+  final bool selectionMode;
+  final Function(Item, bool) selectItem;
 
-  const ListItem({
+  ListItem({
     @required this.item,
     @required this.color,
-    @required this.model,
+    this.selectionMode = false,
+    @required this.selectItem,
   });
 
   @override
@@ -24,10 +25,8 @@ class _ListItemState extends State<ListItem> {
 
   Color get color => widget.color;
 
-  ViewModel get model => widget.model;
-
   void _onLongPress() {
-    model.selectItem(item, !item.isSelected);
+    widget.selectItem(item, !item.isSelected);
   }
 
   @override
@@ -36,10 +35,10 @@ class _ListItemState extends State<ListItem> {
       height: 96,
       child: GestureDetector(
         onLongPress: _onLongPress,
-        onTap: model.selectionMode ? _onLongPress : null,
+        onTap: widget.selectionMode ? _onLongPress : null,
         child: FlipCard(
           direction: FlipDirection.VERTICAL,
-          flipOnTouch: !model.selectionMode,
+          flipOnTouch: !widget.selectionMode,
           front: CustomCard(
             backgroundColor: item.isSelected ? color : Colors.white,
             secondaryColor: color,

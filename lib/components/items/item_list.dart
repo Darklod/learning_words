@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:learningwords/components/items/list_item.dart';
 import 'package:learningwords/models/item.dart';
-import 'package:learningwords/redux/view_model.dart';
 
 class WordList extends StatelessWidget {
   final Color color;
   final List<Item> list;
-  final ViewModel model;
+  final bool selectionMode;
+  final Function(Item, bool) selectItem;
 
-  WordList(this.model, this.list, this.color);
+  WordList(this.list, this.color, this.selectionMode, this.selectItem);
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +19,12 @@ class WordList extends StatelessWidget {
       physics: NeverScrollableScrollPhysics(),
       padding: EdgeInsets.fromLTRB(16, 16, 16, 80),
       itemBuilder: (BuildContext context, int index) {
-        return ListItem(item: list[index], color: color, model: model);
+        return ListItem(
+          item: list[index],
+          color: color,
+          selectItem: selectItem,
+          selectionMode: selectionMode,
+        );
       },
     );
   }

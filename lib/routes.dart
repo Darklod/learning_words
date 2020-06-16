@@ -11,10 +11,7 @@ class Router {
       case homeRoute:
         return MaterialPageRoute(builder: (_) => HomePage());
       case addRoute:
-        var data = settings.arguments as Map;
-        return MaterialPageRoute(
-          builder: (_) => AddPage(onAddItem: data["onAddItem"]),
-        );
+        return MaterialPageRoute(builder: (_) => AddPage());
       default:
         return MaterialPageRoute(
           builder: (BuildContext context) {

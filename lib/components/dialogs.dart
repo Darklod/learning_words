@@ -11,7 +11,7 @@ class StateDialog extends StatefulWidget {
 }
 
 class _StateDialogState extends State<StateDialog> {
-  final states = ["Learned", "Learning", "To Learn"];
+  final states = ["To Learn", "Learning", "Learned"];
   var _state;
 
   @override

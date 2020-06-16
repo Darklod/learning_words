@@ -1,9 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:learningwords/models/item.dart';
-import 'package:learningwords/redux/actions/item.dart';
 import 'package:learningwords/models/app_state.dart';
+import 'package:learningwords/redux/middlewares/item.dart';
 import 'package:learningwords/redux/store.dart';
 import 'package:learningwords/routes.dart';
 import 'package:redux/redux.dart';
@@ -21,7 +19,8 @@ class App extends StatelessWidget {
       store: store,
       child: StoreConnector<AppState, _ViewModel>(
         converter: (Store<AppState> store) => _ViewModel.create(store),
-        onInit: (store) => store.dispatch(GetItemsAction()),
+        onInit: (store) => store.dispatch(initItemsListener()),
+        onDispose: (store) => store.dispatch(closeItemsListener()),
         builder: (BuildContext context, _ViewModel vm) {
           return MaterialApp(
             title: 'Words',
