@@ -1,3 +1,4 @@
+import 'package:learningwords/models/sort_mode.dart';
 import 'package:learningwords/models/word.dart';
 
 class SelectWordAction {
@@ -22,7 +23,7 @@ class LoadedWordsAction {
 }
 
 class SortModeAction {
-  final String mode;
+  final SortMode sortMode;
 
-  SortModeAction(this.mode);
+  SortModeAction(this.sortMode);
 }

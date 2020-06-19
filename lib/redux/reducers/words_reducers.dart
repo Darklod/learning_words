@@ -32,5 +32,5 @@ WordsState _selectItemsReducer(WordsState state, SelectWordsAction action) {
 }
 
 WordsState _changeSortMode(WordsState state, SortModeAction action) {
-  return state.copyWith(sortMode: action.mode);
+  return state.copyWith(sortMode: action.sortMode);
 }

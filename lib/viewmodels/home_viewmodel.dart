@@ -1,3 +1,4 @@
+import 'package:learningwords/models/sort_mode.dart';
 import 'package:learningwords/models/word.dart';
 import 'package:learningwords/redux/actions/words_actions.dart';
 import 'package:learningwords/redux/state/app_state.dart';
@@ -9,7 +10,7 @@ class HomeViewModel {
   final List<Word> learnedWords;
   final List<Word> toLearnWords;
   final List<Word> learningWords;
-  final String sortMode;
+  final SortMode sortMode;
   final Function() onDelete;
   final Function(String) onMove;
   final Function(Word, bool) selectWord;
@@ -41,6 +42,23 @@ class HomeViewModel {
 
     final _selectedItems = _filterSelected(words);
 
+    _compare(Word a, Word b) {
+      final m = sortMode.mode == "ASC" ? 1 : -1;
+
+      switch (sortMode.field) {
+        case "Kana":
+          return a.kana.compareTo(b.kana) * m;
+        case "Translation":
+          return a.translation.compareTo(b.translation) * m;
+        case "JLPT":
+          return a.jlpt.compareTo(b.jlpt) * m;
+        case "Date":
+          return a.timestamp.compareTo(b.timestamp) * m;
+        default:
+          return a.id.compareTo(b.id) * m;
+      }
+    }
+
     _onDelete() {
       store.dispatch(deleteWords(_selectedItems));
     }
@@ -57,20 +75,6 @@ class HomeViewModel {
       store.dispatch(SelectWordsAction(value));
     }
 
-    int _sortBy(Word a, Word b) {
-      switch (sortMode) {
-        case "Kanji":
-          return a.kanji.compareTo(b.kanji);
-        case "Translation":
-          return a.kanji.compareTo(b.kanji);
-        case "JLPT":
-          return a.jlpt.compareTo(a.jlpt);
-        //TODO: By Date
-        default:
-          return a.id.compareTo(b.id);
-      }
-    }
-
     _filterByState(List<Word> items, String state) {
       return items.where((i) => i.state == state).toList();
     }
@@ -80,9 +84,9 @@ class HomeViewModel {
       sortMode: sortMode,
       selectionCount: _selectedItems.length,
       selectionMode: _selectedItems.length > 0,
-      learnedWords: _filterByState(words, "Learned")..sort(_sortBy),
-      learningWords: _filterByState(words, "Learning")..sort(_sortBy),
-      toLearnWords: _filterByState(words, "To Learn")..sort(_sortBy),
+      learnedWords: _filterByState(words, "Learned")..sort(_compare),
+      learningWords: _filterByState(words, "Learning")..sort(_compare),
+      toLearnWords: _filterByState(words, "To Learn")..sort(_compare),
       onDelete: _onDelete,
       onMove: _onMove,
       selectWord: _onSelectItem,

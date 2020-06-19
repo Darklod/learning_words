@@ -129,7 +129,7 @@ class _HomePageState extends State<HomePage>
                           delegate: DataSearch(vm.words),
                         );
                       },
-                    )
+                    ),
                   ];
                 },
                 body: TabBarView(

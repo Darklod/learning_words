@@ -8,6 +8,7 @@ class Word {
   final String translation;
   final String jlpt;
   final String state;
+  final int timestamp;
   final bool isSelected;
 
   const Word({
@@ -17,6 +18,7 @@ class Word {
     @required this.translation,
     @required this.jlpt,
     @required this.state,
+    this.timestamp = 0,
     this.isSelected = false,
   });
 
@@ -27,6 +29,7 @@ class Word {
         state = "To Learn",
         jlpt = "none",
         translation = "",
+        timestamp = 0,
         isSelected = false;
 
   Word copyWith({
@@ -35,6 +38,7 @@ class Word {
     String translation,
     String state,
     String jlpt,
+    int timestamp,
     bool isSelected,
   }) {
     return Word(
@@ -44,6 +48,7 @@ class Word {
       translation: translation ?? this.translation,
       jlpt: jlpt ?? this.jlpt,
       state: state ?? this.state,
+      timestamp: timestamp ?? this.timestamp,
       isSelected: isSelected ?? this.isSelected,
     );
   }
@@ -55,6 +60,7 @@ class Word {
       kana: json["kana"] ?? "",
       translation: json["translation"] ?? "",
       state: json["state"] ?? "",
+      timestamp: json["timestamp"] ?? 0,
       jlpt: json["jlpt"] ?? "",
     );
   }
@@ -71,6 +77,7 @@ class Word {
       "translation": translation,
       "jlpt": jlpt,
       "state": state,
+      "timestamp": timestamp,
     };
   }
 }

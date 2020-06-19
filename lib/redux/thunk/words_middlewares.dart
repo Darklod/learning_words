@@ -5,6 +5,7 @@ import 'package:learningwords/models/word.dart';
 import 'package:learningwords/redux/actions/errors_actions.dart';
 import 'package:learningwords/redux/actions/words_actions.dart';
 import 'package:learningwords/redux/state/app_state.dart';
+import 'package:learningwords/utils.dart';
 import 'package:redux/redux.dart';
 import 'package:redux_thunk/redux_thunk.dart';
 
@@ -63,7 +64,7 @@ ThunkAction<AppState> addWord(Word word) {
     // await store.dispatch(checkInternetConnection());
 
     final DocumentReference ref = await _collection.add(word.toJson());
-    ref..updateData({"id": ref.documentID});
+    ref..updateData({"id": ref.documentID, "timestamp": currentTimestamp});
 
     await store.dispatch(getWords());
   };

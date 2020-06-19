@@ -17,7 +17,7 @@ class WordList extends StatelessWidget {
       shrinkWrap: true,
       primary: false,
       physics: NeverScrollableScrollPhysics(),
-      padding: EdgeInsets.fromLTRB(16, 16, 16, 80),
+      padding: EdgeInsets.fromLTRB(16, 0, 16, 80),
       itemBuilder: (BuildContext context, int index) {
         return ListItem(
           item: list[index],

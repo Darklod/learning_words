@@ -47,12 +47,27 @@ class _ListItemState extends State<ListItem> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    item.kanji,
-                    style: Theme.of(context).textTheme.headline5.copyWith(
-                          color:
-                              item.isSelected ? Colors.white : Colors.black87,
-                        ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        item.kanji,
+                        style: Theme.of(context).textTheme.headline6.copyWith(
+                              color: item.isSelected
+                                  ? Colors.white
+                                  : Colors.black87,
+                            ),
+                      ),
+                      Text(
+                        item.kana,
+                        style: Theme.of(context).textTheme.caption.copyWith(
+                              color: item.isSelected
+                                  ? Colors.white
+                                  : Colors.black54,
+                            ),
+                      ),
+                    ],
                   ),
                   Text(
                     item.jlpt,
